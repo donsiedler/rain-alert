@@ -1,5 +1,8 @@
 import requests
-from data import API_KEY, MY_LAT, MY_LON
+from twilio.rest import Client
+
+from data import API_KEY, MY_LAT, MY_LON, ACCOUNT_SID, AUTH_TOKEN, MY_NUMBER, MESSAGE_SERVICE_NUMBER
+
 
 OWM_endpoint = "https://api.openweathermap.org/data/2.5/onecall"
 
@@ -23,4 +26,9 @@ for hour_data in twelve_hour_forecast:
         will_rain = True
 
 if will_rain:
-    print("Bring an umbrella")
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
+    message = client.messages.create(
+        from_=f"whatsapp:+{MESSAGE_SERVICE_NUMBER}",
+        body="Będzie padać w ciągu najbliższych 12 godzin. Zabierz ze sobą parasol! ☔",
+        to=F"whatsapp:+{MY_NUMBER}"
+    )
